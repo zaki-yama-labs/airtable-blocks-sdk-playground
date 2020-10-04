@@ -11,8 +11,8 @@ import React, { useState } from "react";
 function TodoApp() {
   const base = useBase();
 
-  const [tableName, setTableName] = useState("Tasks");
-  const table = base.getTableByNameIfExists(tableName);
+  const [tableId, setTableId] = useState(null);
+  const table = base.getTableByIdIfExists(tableId);
 
   const records = useRecords(table);
 
@@ -26,7 +26,7 @@ function TodoApp() {
       <TablePicker
         table={table}
         onChange={(newTable) => {
-          setTableName(newTable.name);
+          setTableId(newTable.id);
         }}
       />
       {tasks}
