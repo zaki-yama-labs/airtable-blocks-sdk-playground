@@ -5,13 +5,15 @@ import {
   expandRecord,
   TextButton,
   TablePicker,
+  useGlobalConfig,
 } from "@airtable/blocks/ui";
 import React, { useState } from "react";
 
 function TodoApp() {
   const base = useBase();
 
-  const [tableId, setTableId] = useState(null);
+  const globalConfig = useGlobalConfig();
+  const tableId = globalConfig.get("selectedTableId");
   const table = base.getTableByIdIfExists(tableId);
 
   const records = useRecords(table);
@@ -26,7 +28,7 @@ function TodoApp() {
       <TablePicker
         table={table}
         onChange={(newTable) => {
-          setTableId(newTable.id);
+          globalConfig.setAsync("selectedTableId", newTable.id);
         }}
       />
       {tasks}
