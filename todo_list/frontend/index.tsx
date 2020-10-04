@@ -9,13 +9,13 @@ import React from "react";
 
 function TodoApp() {
   const base = useBase();
-  const table = base.getTableByName("Tasks");
+  const table = base.getTableByNameIfExists("Tasks");
 
   const records = useRecords(table);
 
-  const tasks = records.map((record) => {
+  const tasks = records ? records.map((record) => {
     return <Task key={record.id} record={record} />;
-  });
+  }) : null;
   return <div>{tasks}</div>;
 }
 
