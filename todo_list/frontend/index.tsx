@@ -7,6 +7,7 @@ import {
   useGlobalConfig,
   TablePickerSynced,
   FieldPickerSynced,
+  ViewPickerSynced,
 } from "@airtable/blocks/ui";
 import React from "react";
 import Record from "@airtable/blocks/dist/types/src/models/record";
@@ -16,9 +17,11 @@ function TodoApp() {
 
   const globalConfig = useGlobalConfig();
   const tableId = globalConfig.get("selectedTableId") as string;
+  const viewId = globalConfig.get("selectedViewId") as string;
   const completedFieldId = globalConfig.get("completedFieldId") as string;
 
   const table = base.getTableByIdIfExists(tableId);
+  const view = table ? table.getViewByIdIfExists(viewId) : null;
   const completedField = table
     ? table.getFieldByIdIfExists(completedFieldId)
     : null;
@@ -29,7 +32,7 @@ function TodoApp() {
     });
   };
 
-  const records = useRecords(table);
+  const records = useRecords(view);
 
   const tasks =
     records && completedField
@@ -47,6 +50,7 @@ function TodoApp() {
   return (
     <div>
       <TablePickerSynced globalConfigKey="selectedTableId" />
+      <ViewPickerSynced table={table} globalConfigKey="selectedViewId" />
       <FieldPickerSynced table={table} globalConfigKey="completedFieldId" />
       {tasks}
     </div>
