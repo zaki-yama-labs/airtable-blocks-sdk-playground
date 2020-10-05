@@ -23,6 +23,12 @@ function TodoApp() {
     ? table.getFieldByIdIfExists(completedFieldId)
     : null;
 
+  const toggle = (record: Record) => {
+    table.updateRecordAsync(record, {
+      [completedFieldId]: !record.getCellValue(completedFieldId),
+    });
+  };
+
   const records = useRecords(table);
 
   const tasks =
@@ -32,6 +38,7 @@ function TodoApp() {
             <Task
               key={record.id}
               record={record}
+              onToggle={toggle}
               completedFieldId={completedFieldId}
             />
           );
@@ -49,9 +56,10 @@ function TodoApp() {
 type TaskProps = {
   record: Record;
   completedFieldId: string;
+  onToggle: (record: Record) => void;
 };
 
-function Task({ record, completedFieldId }: TaskProps) {
+function Task({ record, completedFieldId, onToggle }: TaskProps) {
   const label = record.name || "Unnamed record";
   return (
     <div
@@ -64,7 +72,15 @@ function Task({ record, completedFieldId }: TaskProps) {
         borderBottom: "1px solid #ddd",
       }}
     >
-      {record.getCellValue(completedFieldId) ? <s>{label}</s> : label}
+      <TextButton
+        variant="dark"
+        size="xlarge"
+        onClick={() => {
+          onToggle(record);
+        }}
+      >
+        {record.getCellValue(completedFieldId) ? <s>{label}</s> : label}
+      </TextButton>
       <TextButton
         icon="expand"
         aria-label="Expand record"
